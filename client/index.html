@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    .box {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    input {
+      display: block;
+      margin: 20px 0;
+    }
+  </style>
+
+  <body>
+    <div class="box">
+      <form>
+        <input name="name" placeholder="title" type="text" id="name" />
+        <input placeholder="author" name="name" type="text" id="author" />
+        <input placeholder="summary" name="summary" id="summary" type="text" />
+        <input
+          placeholder="publisher"
+          name="publisher"
+          id="publisher"
+          type="text"
+        />
+        <input
+          placeholder="readPage"
+          name="readPage"
+          id="readPage"
+          type="number"
+        />
+        <input
+          placeholder="pageCount"
+          name="pageCount"
+          id="pageCount"
+          type="number"
+        />
+        <input placeholder="year" name="year" id="year" type="number" />
+        <input placeholder="reading" name="reading" id="reading" type="text" />
+
+        <button type="submit">Send</button>
+      </form>
+    </div>
+    <script>
+      const btn = document.querySelector("button");
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const publisher = document.getElementById("publisher").value;
+        const name = document.getElementById("name").value;
+        const author = document.getElementById("author").value;
+        const summary = document.getElementById("summary").value;
+        const reading = document.getElementById("reading").value;
+        const readPage = document.getElementById("readPage").value;
+        const pageCount = document.getElementById("pageCount").value;
+        const year = document.getElementById("year").value;
+
+        const result = {
+          name,
+          author,
+          readPage,
+          pageCount,
+          year,
+          reading,
+          summary,
+          publisher,
+        };
+        // getAll();
+        sendData(result);
+      });
+
+      async function getAll() {
+        try {
+          const data = await fetch("http://localhost:9000/books");
+          const result = await data.json();
+
+          console.log(result);
+        } catch (error) {}
+      }
+      async function sendData(result) {
+        try {
+          const data = await fetch(
+            "http://localhost:9000/books/ea80fd6b-1717-4f32-8b82-f2a1afedfd40",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: new URLSearchParams(result),
+            }
+          );
+          console.log(data.status);
+        } catch (error) {
+          return new Error("something wrong");
+        }
+      }
+    </script>
+    <!-- <script>
+      fetch("http://localhost:9000/books", {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          name: "Jonh Doe",
+        }),
+      })
+        .then((res) => res.json())
+        .then((item) => {
+          console.log(item);
+        });
+    </script> -->
+  </body>
+</html>
